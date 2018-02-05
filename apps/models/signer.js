@@ -128,4 +128,5 @@ module.exports.signAndSend = async function () {
   var serializedTx = tx.serialize();
 
   web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+
 }
