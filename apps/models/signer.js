@@ -1,7 +1,7 @@
 var keythereum = require('keythereum')
 var Tx = require('ethereumjs-tx');
 var Web3 = require('web3')
-var web3 = new Web3('http://localhost:8545')
+var web3 = new Web3(new Web3.providers.HttpProvider('https://kovan.infura.io/HVtVmCIHVgqHGUgihfhX'))
 
 //keyfile for the faucet account
 var keyFile = {
@@ -103,7 +103,7 @@ var contract = new web3.eth.Contract([{
   "type": "event"
 }], '0x23a1f700594f3d9be3fE4ad159F9Bd4006Fc9BdD');
 
-var openDoorDataPart = contract.open.getData(999);
+var openDoorDataPart = contract.methods.open(999).encodeABI();
 
 //private key from faucet account needed to sign transactions
 var privateKey = keythereum.recover("thisisthepasswordforthedoor", keyFile)
@@ -127,6 +127,6 @@ module.exports.signAndSend = async function () {
 
   var serializedTx = tx.serialize();
 
-  web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-
+  let ret = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+  return ret
 }
